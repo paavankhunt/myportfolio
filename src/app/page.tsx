@@ -1,6 +1,5 @@
 'use client';
 import ThemeSwitch from '@/components/core/ThemeSwitch';
-import { Experience } from '@/components/modules/Experience';
 import { MainInfo } from '@/components/modules/MainInfo';
 import client from '@/lib/client';
 import Image from 'next/image';
