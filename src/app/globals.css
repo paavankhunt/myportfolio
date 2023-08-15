@@ -26,4 +26,39 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+  width: 100vw;
+  height: 100vh;
+  font-family: montserrat, sans-serif;
+}
+
+@media (min-width: 992px) {
+  .home-section .container {
+    max-width: 880px;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+/* @media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+} */
+
+/* @media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
+} */
+
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
 }
