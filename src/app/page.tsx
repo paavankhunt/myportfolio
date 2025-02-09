@@ -17,7 +17,7 @@ export default function Home() {
   // }, [fetchData]);
   return (
     <main
-      className="min-h-screen w-full h-full"
+      className="w-full h-full"
       style={{
         color: 'var(--color-text)',
         background: 'var(--color-background)',
