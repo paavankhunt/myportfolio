@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { Anime } from '@/types/anime';
 import axios from 'axios';
+import Link from 'next/link';
 
 export default function AnimeDetails({ params }: { params: { id: string } }) {
   const [anime, setAnime] = useState<Anime | null>(null);
@@ -79,7 +80,7 @@ export default function AnimeDetails({ params }: { params: { id: string } }) {
 
           {/* My List Status */}
           {anime.my_list_status && (
-            <div className="mt-4 p-4 border rounded bg-gray-100 shadow-sm">
+            <div className="mt-4 p-4 border rounded bg-gray-400 shadow-sm">
               <h2 className="text-lg font-semibold">My List Status</h2>
               <p>
                 <strong>Status:</strong> {anime.my_list_status.status}
@@ -116,14 +117,16 @@ export default function AnimeDetails({ params }: { params: { id: string } }) {
             <h2 className="text-xl font-bold">Recommendations</h2>
             <div className="flex gap-4 overflow-x-auto p-2">
               {anime.recommendations.map((rec) => (
-                <div key={rec.node.id} className="w-48 flex-shrink-0">
-                  <img
-                    src={rec.node.main_picture?.medium}
-                    alt={rec.node.title}
-                    className="w-full rounded-lg shadow"
-                  />
-                  <p className="text-sm mt-2 text-center">{rec.node.title}</p>
-                </div>
+                <Link href={`/anime/${rec.node.id}`} key={rec.node.id}>
+                  <div className="w-48 flex-shrink-0">
+                    <img
+                      src={rec.node.main_picture?.medium}
+                      alt={rec.node.title}
+                      className="w-full rounded-lg shadow"
+                    />
+                    <p className="text-sm mt-2 text-center">{rec.node.title}</p>
+                  </div>
+                </Link>
               ))}
             </div>
           </div>
