@@ -1,28 +1,33 @@
 import Image from 'next/image';
-import React from 'react';
 
 export const MainInfo = () => {
   return (
-    <div className="flex justify-center pt-40 container gap-16 flex-1">
-      <div className="flex flex-col justify-start items-center w-1/3">
+    <div className="flex flex-col md:flex-row items-center max-w-5xl mx-auto gap-8">
+      {/* Profile Image */}
+      <div className="flex flex-col items-center md:w-1/3">
         <Image
-          className="rounded-full"
-          src={'https://avatars.githubusercontent.com/u/69294115?v=4'}
-          width={200}
-          height={200}
-          alt={''}
+          className="rounded-full shadow-lg"
+          src="https://avatars.githubusercontent.com/u/69294115?v=4"
+          width={180}
+          height={180}
+          alt="Paavan Khunt"
         />
-        <div className="text-2xl mt-4">Paavan Khunt</div>
+        <h2 className="text-2xl font-semibold mt-4 text-primary">
+          Paavan Khunt
+        </h2>
       </div>
-      <div className="w-2/3">
-        <div className="text-4xl ">Hello</div>
-        <div className="text-xl leading-9">
-          I am a software engineer with 3 year of experience in the Web and
-          Mobile application development. I have expertise in programming
-          languages such as JavaScript, Java, and TypeScript. With my skills and
+
+      {/* Info Section */}
+      <div className="md:w-2/3 text-center md:text-left">
+        <h1 className="text-4xl font-bold text-primary">Hello 👋</h1>
+        <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mt-4">
+          I am a software engineer with <strong>3 years</strong> of experience
+          in Web and Mobile application development. I have expertise in
+          programming languages such as
+          <strong> JavaScript, Java, and TypeScript</strong>. With my skills and
           experience, I am confident in my ability to solve complex technical
           challenges and contribute to any software development team.
-        </div>
+        </p>
       </div>
     </div>
   );
