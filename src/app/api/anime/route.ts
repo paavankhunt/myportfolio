@@ -14,7 +14,10 @@ export async function GET(req: NextRequest) {
 
     const data = await response.json();
     return NextResponse.json(data);
-  } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error?.message || 'An error occurred' },
+      { status: 500 }
+    );
   }
 }
