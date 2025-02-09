@@ -17,7 +17,7 @@ export const MainInfo = () => {
       <div className="w-2/3">
         <div className="text-4xl ">Hello</div>
         <div className="text-xl leading-9">
-          I am a software engineer with 1 year of experience in the Web and
+          I am a software engineer with 3 year of experience in the Web and
           Mobile application development. I have expertise in programming
           languages such as JavaScript, Java, and TypeScript. With my skills and
           experience, I am confident in my ability to solve complex technical
