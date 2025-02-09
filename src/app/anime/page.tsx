@@ -21,8 +21,8 @@ export default function AnimePage() {
       if (!res.ok) throw new Error('Failed to fetch anime list');
       const data: AnimeListResponse = await res.json();
       setAnimeList(data.data || []);
-    } catch (error) {
-      setError(error.message);
+    } catch (error: any) {
+      setError(error?.message || 'An error occurred');
     } finally {
       setLoading(false);
     }
