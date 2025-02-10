@@ -20,9 +20,10 @@ export default function AnimePage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/anime');
+      const res = await fetch(`/api/anime?t=${Date.now()}`);
       if (!res.ok) throw new Error('Failed to fetch anime list');
       const data: Record<string, AnimeListResponse['data']> = await res.json();
+
       setAnimeList(data);
     } catch (error: any) {
       setError(error?.message || 'An error occurred');
