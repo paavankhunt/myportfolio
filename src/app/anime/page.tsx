@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import AnimeList from '@/components/modules/AnimeList';
 import SearchBar from '@/components/modules/SearchBar';
-import { Anime, AnimeListResponse } from '@/types/anime';
+import { AnimeListResponse } from '@/types/anime';
 
 export default function AnimePage() {
   const [animeList, setAnimeList] = useState<
@@ -36,56 +36,58 @@ export default function AnimePage() {
   }, []);
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
-      {/* Search Bar */}
-      <SearchBar
-        setSearchResults={setSearchResults}
-        animeList={animeList}
-        query={query}
-        setQuery={setQuery}
-      />
+    <div className="min-h-screen bg-gray-900 text-white p-6 flex flex-col items-center">
+      <div className="w-full max-w-4xl bg-gray-800 bg-opacity-90 shadow-lg rounded-2xl p-6 backdrop-blur-lg">
+        {/* Search Bar */}
+        <SearchBar
+          setSearchResults={setSearchResults}
+          animeList={animeList}
+          query={query}
+          setQuery={setQuery}
+        />
 
-      {/* Conditional Rendering: Search Results or Anime List */}
-      {query.length > 0 ? (
-        <div className="mt-6">
-          <h2 className="text-2xl font-semibold border-b pb-2">
-            Search Results from My Anime List
-          </h2>
-          <AnimeList anime={searchResults} fetchAnimeList={fetchAnimeList} />
-        </div>
-      ) : (
-        <div className="mt-6">
-          <h2 className="text-2xl font-semibold border-b pb-2">
-            My Anime List
-          </h2>
-          {loading ? (
-            <p className="text-center text-gray-600 mt-4">
-              Loading anime list...
-            </p>
-          ) : error ? (
-            <p className="text-center text-red-500 mt-4">{error}</p>
-          ) : Object.keys(animeList).length > 0 ? (
-            <div>
-              {Object.entries(animeList).map(
-                ([status, list]) =>
-                  list.length > 0 && (
-                    <div key={status} className="mt-6">
-                      <h3 className="text-xl font-semibold capitalize border-b pb-2">
-                        {status.replace('_', ' ')}
-                      </h3>
-                      <AnimeList
-                        anime={{ [status]: list }}
-                        fetchAnimeList={fetchAnimeList}
-                      />
-                    </div>
-                  )
-              )}
-            </div>
-          ) : (
-            <p className="text-center text-gray-500 mt-4">No anime found.</p>
-          )}
-        </div>
-      )}
+        {/* Conditional Rendering: Search Results or Anime List */}
+        {query.length > 0 ? (
+          <div className="mt-6">
+            <h2 className="text-2xl font-semibold border-b border-gray-700 pb-2">
+              Search Results
+            </h2>
+            <AnimeList anime={searchResults} fetchAnimeList={fetchAnimeList} />
+          </div>
+        ) : (
+          <div className="mt-6">
+            <h2 className="text-2xl font-semibold border-b border-gray-700 pb-2">
+              My Anime List
+            </h2>
+            {loading ? (
+              <p className="text-center text-gray-400 mt-4 animate-pulse">
+                Loading anime list...
+              </p>
+            ) : error ? (
+              <p className="text-center text-red-400 mt-4">{error}</p>
+            ) : Object.keys(animeList).length > 0 ? (
+              <div>
+                {Object.entries(animeList).map(
+                  ([status, list]) =>
+                    list.length > 0 && (
+                      <div key={status} className="mt-6">
+                        <h3 className="text-xl font-semibold capitalize border-b border-gray-700 pb-2">
+                          {status.replaceAll('_', ' ')} ({list.length})
+                        </h3>
+                        <AnimeList
+                          anime={{ [status]: list }}
+                          fetchAnimeList={fetchAnimeList}
+                        />
+                      </div>
+                    )
+                )}
+              </div>
+            ) : (
+              <p className="text-center text-gray-400 mt-4">No anime found.</p>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

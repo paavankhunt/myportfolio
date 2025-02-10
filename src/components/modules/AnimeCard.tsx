@@ -7,8 +7,6 @@ interface AnimeCardProps {
 }
 
 export default function AnimeCard({ anime, status }: AnimeCardProps) {
-  console.log('🚀 ~ AnimeCard ~ status:', status);
-
   // Define badge colors based on status
   const statusColors: Record<string, string> = {
     watching: 'bg-blue-500',
@@ -21,8 +19,9 @@ export default function AnimeCard({ anime, status }: AnimeCardProps) {
   return (
     <Link href={`/anime/${anime.id}`} className="block">
       <div
-        className="relative border rounded-lg p-4 shadow-md bg-white cursor-pointer 
-                      hover:shadow-lg transition-transform transform hover:scale-105"
+        className="relative border border-gray-700 rounded-lg p-4 shadow-md bg-gray-800 
+                   cursor-pointer hover:shadow-lg transition-transform transform hover:scale-105 
+                   hover:bg-gray-700 bg-opacity-90 backdrop-blur-lg"
       >
         {/* Status Badge */}
         {status && (
@@ -42,13 +41,13 @@ export default function AnimeCard({ anime, status }: AnimeCardProps) {
           <img
             src={anime.main_picture?.medium}
             alt={anime.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover rounded-md border border-gray-600 shadow-md"
           />
         </div>
 
         {/* Anime Title */}
-        <h3 className="text-lg font-semibold mt-3 text-center text-gray-800">
-          {anime.title}
+        <h3 className="text-lg font-semibold mt-3 text-center text-gray-300">
+          {anime.alternative_titles?.en || anime.title}
         </h3>
       </div>
     </Link>

@@ -13,23 +13,30 @@ export async function GET(req: NextRequest) {
     let allAnime: Record<string, any[]> = {};
 
     for (const status of statuses) {
-      const response = await fetch(
-        `${MAL_API_URL}/users/@me/animelist?limit=1000&fields=list_status&status=${status}`,
-        {
-          headers: { Authorization: MAL_ACCESS_TOKEN }, // Fix missing "Bearer"
-        }
-      );
+      let animeList: any[] = [];
+      let nextPageUrl:
+        | string
+        | null = `${MAL_API_URL}/users/@me/animelist?limit=100&fields=list_status,alternative_titles&status=${status}`;
 
-      if (!response.ok)
-        throw new Error(
-          `Failed to fetch ${status} anime: ${response.statusText}`
-        );
+      while (nextPageUrl) {
+        const response = await fetch(nextPageUrl, {
+          headers: { Authorization: MAL_ACCESS_TOKEN }, // Fix Bearer token issue
+        });
 
-      const data = await response.json();
-      allAnime[status] = data.data || []; // Store results by status
+        if (!response.ok)
+          throw new Error(
+            `Failed to fetch ${status} anime: ${response.statusText}`
+          );
+
+        const data = await response.json();
+        animeList.push(...(data.data || [])); // Add fetched anime to the list
+        nextPageUrl = data.paging?.next || null; // Get next page URL if available
+      }
+
+      allAnime[status] = animeList; // Store all fetched anime under the respective status
     }
 
-    return NextResponse.json(allAnime); // Return all anime categorized by status
+    return NextResponse.json(allAnime);
   } catch (error: any) {
     console.error('Error fetching anime list:', error);
     return NextResponse.json(

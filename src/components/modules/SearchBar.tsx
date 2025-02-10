@@ -2,7 +2,7 @@ import { AnimeListResponse } from '@/types/anime';
 import { useState } from 'react';
 
 interface SearchBarProps {
-  animeList: Record<string, AnimeListResponse['data']>; // Updated type
+  animeList: Record<string, AnimeListResponse['data']>;
   setSearchResults: React.Dispatch<
     React.SetStateAction<Record<string, AnimeListResponse['data']>>
   >;
@@ -24,7 +24,6 @@ export default function SearchBar({
       return;
     }
 
-    // Flatten the anime list and filter
     const filteredResults: Record<string, AnimeListResponse['data']> = {};
 
     for (const status in animeList) {
@@ -41,11 +40,11 @@ export default function SearchBar({
   };
 
   return (
-    <div className="mb-4">
+    <div className="mb-6">
       <input
         type="text"
         placeholder="Search anime from My Anime List..."
-        className="border p-2 rounded w-full"
+        className="w-full p-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-300"
         value={query}
         onChange={(e) => handleSearch(e.target.value)}
       />
