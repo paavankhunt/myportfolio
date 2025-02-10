@@ -34,7 +34,7 @@ export default function AnimeDetails({ params }: { params: { id: string } }) {
 
   return (
     // <div className="min-h-screen bg-gray-900 text-white p-6 flex flex-col items-center">
-    <div className=" mx-auto p-6  bg-gray-900 text-white shadow-lg">
+    <div className="min-h-screen mx-auto p-6  bg-gray-900 text-white shadow-lg">
       {/* Anime Header */}
       <div className="flex flex-col md:flex-row gap-8 bg-gray-800 p-6 rounded-lg shadow-md">
         {/* Anime Cover Image */}
