@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import AnimeList from '@/components/modules/AnimeList';
 import SearchBar from '@/components/modules/SearchBar';
 import { AnimeListResponse } from '@/types/anime';
@@ -15,6 +16,8 @@ export default function AnimePage() {
   const [searchResults, setSearchResults] = useState<
     Record<string, AnimeListResponse['data']>
   >({});
+
+  const router = useRouter();
 
   const fetchAnimeList = async () => {
     setLoading(true);
@@ -57,9 +60,19 @@ export default function AnimePage() {
           </div>
         ) : (
           <div className="mt-6">
-            <h2 className="text-2xl font-semibold border-b border-gray-700 pb-2">
-              My Anime List
-            </h2>
+            {/* Title + Button in Flex Container */}
+            <div className="flex items-center justify-between border-b border-gray-700 pb-2">
+              <h2 className="text-2xl font-semibold">My Anime List</h2>
+
+              <button
+                onClick={() => router.push('/animestats')}
+                className="px-5 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 
+                          hover:from-purple-500 hover:to-blue-500 transition-all text-white shadow-md"
+              >
+                📊 View Stats
+              </button>
+            </div>
+
             {loading ? (
               <p className="text-center text-gray-400 mt-4 animate-pulse">
                 Loading anime list...
