@@ -2,32 +2,32 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import AnimeList from '@/components/modules/AnimeList';
 import SearchBar from '@/components/modules/SearchBar';
-import { AnimeListResponse } from '@/types/anime';
+import MangaList from '@/components/modules/MangaList';
+import { MangaListResponse } from '@/types/anime';
 
-export default function AnimePage() {
-  const [animeList, setAnimeList] = useState<
-    Record<string, AnimeListResponse['data']>
+export default function MangaPage() {
+  const [mangaList, setMangaList] = useState<
+    Record<string, MangaListResponse['data']>
   >({});
   const [query, setQuery] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchResults, setSearchResults] = useState<
-    Record<string, AnimeListResponse['data']>
+    Record<string, MangaListResponse['data']>
   >({});
 
   const router = useRouter();
 
-  const fetchAnimeList = async () => {
+  const fetchMangaList = async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/anime?t=${Date.now()}`);
-      if (!res.ok) throw new Error('Failed to fetch anime list');
-      const data: Record<string, AnimeListResponse['data']> = await res.json();
+      const res = await fetch(`/api/manga?t=${Date.now()}`);
+      if (!res.ok) throw new Error('Failed to fetch manga list');
+      const data: Record<string, MangaListResponse['data']> = await res.json();
 
-      setAnimeList(data);
+      setMangaList(data);
     } catch (error: any) {
       setError(error?.message || 'An error occurred');
     } finally {
@@ -36,7 +36,7 @@ export default function AnimePage() {
   };
 
   useEffect(() => {
-    fetchAnimeList();
+    fetchMangaList();
   }, []);
 
   return (
@@ -44,61 +44,48 @@ export default function AnimePage() {
       <div className="w-full max-w-4xl bg-gray-800 bg-opacity-90 shadow-lg rounded-2xl p-6 backdrop-blur-lg">
         {/* Search Bar */}
         <SearchBar
-          dataList={animeList}
+          dataList={mangaList}
           setSearchResults={setSearchResults}
           query={query}
           setQuery={setQuery}
-          placeholder="Search anime from My Anime List..."
+          placeholder="Search manga from My Manga List..."
         />
 
-        {/* Conditional Rendering: Search Results or Anime List */}
+        {/* Conditional Rendering: Search Results or Manga List */}
         {query.length > 0 ? (
           <div className="mt-6">
             <h2 className="text-2xl font-semibold border-b border-gray-700 pb-2">
               Search Results
             </h2>
-            <AnimeList anime={searchResults} fetchAnimeList={fetchAnimeList} />
+            <MangaList manga={searchResults} fetchMangaList={fetchMangaList} />
           </div>
         ) : (
           <div className="mt-6">
-            {/* Title + Button in Flex Container */}
-            <div className="flex items-center justify-between border-b border-gray-700 pb-2">
-              <h2 className="text-2xl font-semibold">My Anime List</h2>
-
-              <button
-                onClick={() => router.push('/animestats')}
-                className="px-5 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 
-                          hover:from-purple-500 hover:to-blue-500 transition-all text-white shadow-md"
-              >
-                📊 View Stats
-              </button>
-            </div>
-
             {loading ? (
               <p className="text-center text-gray-400 mt-4 animate-pulse">
-                Loading anime list...
+                Loading manga list...
               </p>
             ) : error ? (
               <p className="text-center text-red-400 mt-4">{error}</p>
-            ) : Object.keys(animeList).length > 0 ? (
+            ) : Object.keys(mangaList).length > 0 ? (
               <div>
-                {Object.entries(animeList).map(
+                {Object.entries(mangaList).map(
                   ([status, list]) =>
                     list.length > 0 && (
                       <div key={status} className="mt-6">
                         <h3 className="text-xl font-semibold capitalize border-b border-gray-700 pb-2">
                           {status.replaceAll('_', ' ')} ({list.length})
                         </h3>
-                        <AnimeList
-                          anime={{ [status]: list }}
-                          fetchAnimeList={fetchAnimeList}
+                        <MangaList
+                          manga={{ [status]: list }}
+                          fetchMangaList={fetchMangaList}
                         />
                       </div>
                     )
                 )}
               </div>
             ) : (
-              <p className="text-center text-gray-400 mt-4">No anime found.</p>
+              <p className="text-center text-gray-400 mt-4">No manga found.</p>
             )}
           </div>
         )}
