@@ -186,6 +186,7 @@ export interface Manga {
     num_chapters_read: number;
     is_rereading: boolean;
     updated_at: string;
+    num_volumes_read: number;
   };
 }
 
