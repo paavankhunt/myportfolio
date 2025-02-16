@@ -23,7 +23,9 @@ export default function AnimePage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/anime?t=${Date.now()}`);
+      const res = await fetch(`/api/anime?t=${Date.now()}`, {
+        cache: 'no-store',
+      });
       const data = await res.json();
 
       if (res.status === 401 && data.redirect_url) {

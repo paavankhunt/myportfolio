@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getValidAccessToken } from '@/utils/tokenUtils';
 import { AnimeListResponse } from '@/types/anime';
-
-const MAL_API_URL = 'https://api.myanimelist.net/v2';
+import { MAL_API_URL } from '@/constants';
 
 function groupAnimeByStatus(animeList: AnimeListResponse['data']) {
   const categorizedAnime: Record<string, AnimeListResponse['data']> = {};
@@ -32,7 +31,7 @@ export async function GET(req: NextRequest) {
 
     const response = await fetch(
       `${MAL_API_URL}/users/@me/animelist?limit=1000&fields=list_status,alternative_titles,status`,
-      { headers }
+      { headers, cache: 'no-store' }
     );
 
     if (!response.ok) {
