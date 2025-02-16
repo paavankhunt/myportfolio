@@ -1,4 +1,4 @@
-import { MAL_API_URL } from '@/constants';
+import { MAL_API_URL, MAL_CLIENT_ID, MAL_REDIRECT_URI } from '@/constants';
 import { getValidAccessToken } from '@/utils/tokenUtils';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -7,13 +7,25 @@ export async function GET(req: NextRequest) {
     let accessToken = await getValidAccessToken();
 
     if (!accessToken) {
-      throw new Error('❌ Access token retrieval failed.');
+      return NextResponse.redirect(
+        `https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id=${MAL_CLIENT_ID}&redirect_uri=${encodeURIComponent(
+          MAL_REDIRECT_URI
+        )}&code_challenge=paavanpaavanpaavanpaavanpaavanpaavanpaavanpaavan&code_challenge_method=plain`
+      );
     }
+
+    const headers = new Headers({
+      Authorization: accessToken,
+      'Cache-Control': 'no-store',
+      Pragma: 'no-cache',
+      Expires: '0',
+    });
 
     const response = await fetch(
       `${MAL_API_URL}/users/@me?fields=anime_statistics`,
       {
-        headers: { Authorization: accessToken as string },
+        headers,
+        cache: 'no-store',
       }
     );
 

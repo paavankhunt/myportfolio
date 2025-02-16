@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getValidAccessToken } from '@/utils/tokenUtils';
 import { AnimeListResponse } from '@/types/anime';
-import { MAL_API_URL } from '@/constants';
+import { MAL_API_URL, MAL_CLIENT_ID, MAL_REDIRECT_URI } from '@/constants';
 
 function groupAnimeByStatus(animeList: AnimeListResponse['data']) {
   const categorizedAnime: Record<string, AnimeListResponse['data']> = {};
@@ -21,12 +21,18 @@ export async function GET(req: NextRequest) {
   try {
     let accessToken = await getValidAccessToken();
     if (!accessToken) {
-      throw new Error('❌ Access token retrieval failed.');
+      return NextResponse.redirect(
+        `https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id=${MAL_CLIENT_ID}&redirect_uri=${encodeURIComponent(
+          MAL_REDIRECT_URI
+        )}&code_challenge=paavanpaavanpaavanpaavanpaavanpaavanpaavanpaavan&code_challenge_method=plain`
+      );
     }
 
     const headers = new Headers({
-      Authorization: accessToken as string,
+      Authorization: accessToken,
       'Cache-Control': 'no-store',
+      Pragma: 'no-cache',
+      Expires: '0',
     });
 
     const response = await fetch(
