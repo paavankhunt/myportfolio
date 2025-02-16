@@ -24,8 +24,15 @@ export default function AnimePage() {
     setError(null);
     try {
       const res = await fetch(`/api/anime?t=${Date.now()}`);
-      if (!res.ok) throw new Error('Failed to fetch anime list');
-      const data: Record<string, AnimeListResponse['data']> = await res.json();
+      const data = await res.json();
+
+      if (res.status === 401 && data.redirect_url) {
+        console.log('🔄 Redirecting to MyAnimeList login...');
+        window.location.href = data.redirect_url;
+        return;
+      }
+
+      if (!res.ok) throw new Error(data?.error || 'Failed to fetch anime list');
 
       setAnimeList(data);
     } catch (error: any) {
@@ -42,7 +49,6 @@ export default function AnimePage() {
   return (
     <div className="min-h-screen bg-gray-900 text-white p-6 flex flex-col items-center">
       <div className="w-full max-w-4xl bg-gray-800 bg-opacity-90 shadow-lg rounded-2xl p-6 backdrop-blur-lg">
-        {/* Search Bar */}
         <SearchBar
           dataList={animeList}
           setSearchResults={setSearchResults}
@@ -51,28 +57,11 @@ export default function AnimePage() {
           placeholder="Search anime from My Anime List..."
         />
 
-        {/* Conditional Rendering: Search Results or Anime List */}
         {query.length > 0 ? (
-          <div className="mt-6">
-            <h2 className="text-2xl font-semibold border-b border-gray-700 pb-2">
-              Search Results
-            </h2>
-            <AnimeList anime={searchResults} fetchAnimeList={fetchAnimeList} />
-          </div>
+          <AnimeList anime={searchResults} fetchAnimeList={fetchAnimeList} />
         ) : (
-          <div className="mt-6">
-            {/* Title + Button in Flex Container */}
-            <div className="flex items-center justify-between border-b border-gray-700 pb-2">
-              <h2 className="text-2xl font-semibold">My Anime List</h2>
-
-              <button
-                onClick={() => router.push('/animestats')}
-                className="px-5 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 
-                          hover:from-purple-500 hover:to-blue-500 transition-all text-white shadow-md"
-              >
-                📊 View Stats
-              </button>
-            </div>
+          <>
+            <h2 className="text-2xl font-semibold">My Anime List</h2>
 
             {loading ? (
               <p className="text-center text-gray-400 mt-4 animate-pulse">
@@ -81,26 +70,24 @@ export default function AnimePage() {
             ) : error ? (
               <p className="text-center text-red-400 mt-4">{error}</p>
             ) : Object.keys(animeList).length > 0 ? (
-              <div>
-                {Object.entries(animeList).map(
-                  ([status, list]) =>
-                    list.length > 0 && (
-                      <div key={status} className="mt-6">
-                        <h3 className="text-xl font-semibold capitalize border-b border-gray-700 pb-2">
-                          {status.replaceAll('_', ' ')} ({list.length})
-                        </h3>
-                        <AnimeList
-                          anime={{ [status]: list }}
-                          fetchAnimeList={fetchAnimeList}
-                        />
-                      </div>
-                    )
-                )}
-              </div>
+              Object.entries(animeList).map(
+                ([status, list]) =>
+                  list.length > 0 && (
+                    <div key={status} className="mt-6">
+                      <h3 className="text-xl font-semibold capitalize border-b border-gray-700 pb-2">
+                        {status.replaceAll('_', ' ')} ({list.length})
+                      </h3>
+                      <AnimeList
+                        anime={{ [status]: list }}
+                        fetchAnimeList={fetchAnimeList}
+                      />
+                    </div>
+                  )
+              )
             ) : (
               <p className="text-center text-gray-400 mt-4">No anime found.</p>
             )}
-          </div>
+          </>
         )}
       </div>
     </div>

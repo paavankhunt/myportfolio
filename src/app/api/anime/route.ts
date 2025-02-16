@@ -1,48 +1,39 @@
-import { MAL_ACCESS_TOKEN, MAL_API_URL } from '@/constants';
 import { NextRequest, NextResponse } from 'next/server';
+import { getValidAccessToken } from '@/utils/tokenUtils';
+
+const MAL_API_URL = 'https://api.myanimelist.net/v2';
 
 export async function GET(req: NextRequest) {
   try {
-    const headers = new Headers({
-      Authorization: MAL_ACCESS_TOKEN,
-      'Cache-Control': 'no-store', // 🔥 Prevent caching
-      Pragma: 'no-cache',
-      Expires: '0',
-    });
+    console.log('🚀 Fetching valid access token...');
+    let accessToken = await getValidAccessToken(); // ✅ Ensures valid token
 
-    const statuses = [
-      'watching',
-      'completed',
-      'on_hold',
-      'dropped',
-      'plan_to_watch',
-    ];
-    let allAnime: Record<string, any[]> = {};
-
-    for (const status of statuses) {
-      let animeList: any[] = [];
-      let nextPageUrl = `${MAL_API_URL}/users/@me/animelist?limit=1000&fields=list_status,alternative_titles&status=${status}`;
-
-      while (nextPageUrl) {
-        const response = await fetch(nextPageUrl, { headers });
-
-        if (!response.ok) {
-          throw new Error(
-            `Failed to fetch ${status} anime: ${response.statusText}`
-          );
-        }
-
-        const data = await response.json();
-        animeList.push(...(data.data || []));
-        nextPageUrl = data.paging?.next || null;
-      }
-
-      allAnime[status] = animeList;
+    if (!accessToken) {
+      throw new Error('❌ Access token retrieval failed.');
     }
 
-    return new NextResponse(JSON.stringify(allAnime), { headers });
+    console.log('✅ Using Access Token:', accessToken);
+
+    const headers = new Headers({
+      Authorization: `Bearer ${accessToken}`, // ✅ Added "Bearer"
+      'Cache-Control': 'no-store',
+    });
+
+    const response = await fetch(
+      `${MAL_API_URL}/users/@me/animelist?limit=1000&fields=list_status`,
+      { headers }
+    );
+
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      console.error('❌ Failed API Call:', errorResponse);
+      throw new Error(`Failed to fetch anime list: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return NextResponse.json(data);
   } catch (error: any) {
-    console.error('Error fetching anime list:', error);
+    console.error('❌ Error fetching anime list:', error);
     return NextResponse.json(
       { error: error?.message || 'An error occurred' },
       { status: 500 }
