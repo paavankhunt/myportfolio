@@ -4,7 +4,7 @@ import { AnimeListResponse } from '@/types/anime';
 
 const MAL_API_URL = 'https://api.myanimelist.net/v2';
 
-export function groupAnimeByStatus(animeList: AnimeListResponse['data']) {
+function groupAnimeByStatus(animeList: AnimeListResponse['data']) {
   const categorizedAnime: Record<string, AnimeListResponse['data']> = {};
 
   animeList.forEach((anime) => {
