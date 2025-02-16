@@ -101,7 +101,7 @@ export interface Anime {
 }
 
 export interface AnimeListResponse {
-  data: { node: Anime; my_list_status?: Anime['my_list_status'] }[];
+  data: { node: Anime; list_status?: Anime['my_list_status'] }[];
 }
 
 export interface Manga {

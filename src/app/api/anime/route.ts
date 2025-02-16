@@ -1,12 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getValidAccessToken } from '@/utils/tokenUtils';
+import { AnimeListResponse } from '@/types/anime';
 
 const MAL_API_URL = 'https://api.myanimelist.net/v2';
+
+export function groupAnimeByStatus(animeList: AnimeListResponse['data']) {
+  const categorizedAnime: Record<string, AnimeListResponse['data']> = {};
+
+  animeList.forEach((anime) => {
+    const status = anime.list_status?.status || 'unknown';
+    if (!categorizedAnime[status]) {
+      categorizedAnime[status] = [];
+    }
+    categorizedAnime[status].push(anime);
+  });
+
+  return categorizedAnime;
+}
 
 export async function GET(req: NextRequest) {
   try {
     let accessToken = await getValidAccessToken();
-
     if (!accessToken) {
       throw new Error('❌ Access token retrieval failed.');
     }
@@ -17,7 +31,7 @@ export async function GET(req: NextRequest) {
     });
 
     const response = await fetch(
-      `${MAL_API_URL}/users/@me/animelist?limit=1000&fields=list_status`,
+      `${MAL_API_URL}/users/@me/animelist?limit=1000&fields=list_status,alternative_titles,status`,
       { headers }
     );
 
@@ -27,7 +41,9 @@ export async function GET(req: NextRequest) {
     }
 
     const data = await response.json();
-    return NextResponse.json(data);
+    const categorizedAnime = groupAnimeByStatus(data?.data);
+
+    return NextResponse.json(categorizedAnime);
   } catch (error: any) {
     return NextResponse.json(
       { error: error?.message || 'An error occurred' },
