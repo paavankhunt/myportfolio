@@ -15,7 +15,7 @@ export default function AnimeDetails({ params }: { params: { id: string } }) {
       try {
         const res = await axios.get(`/api/anime/${params.id}`);
         const data = await res.data;
-        if (res.status === 401 && data.redirect_url) {
+        if (data.status === 401 && data.redirect_url) {
           console.log('🔄 Redirecting to MyAnimeList login...');
           window.location.href = data.redirect_url;
           return;

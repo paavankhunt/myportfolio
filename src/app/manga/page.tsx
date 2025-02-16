@@ -26,7 +26,7 @@ export default function MangaPage() {
       const res = await fetch(`/api/manga?t=${Date.now()}`);
       if (!res.ok) throw new Error('Failed to fetch manga list');
       const data = await res.json();
-      if (res.status === 401 && data.redirect_url) {
+      if (data.status === 401 && data.redirect_url) {
         console.log('🔄 Redirecting to MyAnimeList login...');
         window.location.href = data.redirect_url;
         return;
