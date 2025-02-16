@@ -15,7 +15,7 @@ export async function getValidAccessToken(): Promise<string | NextResponse> {
     let accessToken = await kv.get<string>('mal_access_token');
     if (accessToken) {
       console.log('✅ Using cached access token:', accessToken);
-      return accessToken;
+      return `Bearer ${accessToken}` || '';
     }
 
     // ✅ Get refresh token from KV
