@@ -14,6 +14,13 @@ export default function AnimeDetails({ params }: { params: { id: string } }) {
     async function fetchAnime() {
       try {
         const res = await axios.get(`/api/anime/${params.id}`);
+        const data = await res.data;
+        if (res.status === 401 && data.redirect_url) {
+          console.log('🔄 Redirecting to MyAnimeList login...');
+          window.location.href = data.redirect_url;
+          return;
+        }
+
         setAnime(res.data);
       } catch (error) {
         toast.error('Failed to fetch anime.');

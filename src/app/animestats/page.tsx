@@ -41,6 +41,11 @@ export default function AnimeStatsPage() {
         const response = await fetch('/api/animestats');
         if (!response.ok) throw new Error('Failed to fetch anime statistics');
         const data = await response.json();
+        if (response.status === 401 && data.redirect_url) {
+          console.log('🔄 Redirecting to MyAnimeList login...');
+          window.location.href = data.redirect_url;
+          return;
+        }
         setStats(data);
       } catch (error: any) {
         setError(error?.message || 'An error occurred');

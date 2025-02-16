@@ -24,11 +24,12 @@ export async function GET(req: Request) {
     let accessToken = await getValidAccessToken();
 
     if (!accessToken) {
-      return NextResponse.redirect(
-        `https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id=${MAL_CLIENT_ID}&redirect_uri=${encodeURIComponent(
+      return NextResponse.json({
+        status: 401,
+        redirect_url: `https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id=${MAL_CLIENT_ID}&redirect_uri=${encodeURIComponent(
           MAL_REDIRECT_URI
-        )}&code_challenge=paavanpaavanpaavanpaavanpaavanpaavanpaavanpaavan&code_challenge_method=plain`
-      );
+        )}&code_challenge=paavanpaavanpaavanpaavanpaavanpaavanpaavanpaavan&code_challenge_method=plain`,
+      });
     }
 
     const headers = new Headers({
