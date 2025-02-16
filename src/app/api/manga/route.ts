@@ -1,10 +1,17 @@
-import { MAL_ACCESS_TOKEN, MAL_API_URL } from '@/constants';
+import { MAL_API_URL } from '@/constants';
+import { getValidAccessToken } from '@/utils/tokenUtils';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
   try {
+    let accessToken = await getValidAccessToken();
+
+    if (!accessToken) {
+      throw new Error('❌ Access token retrieval failed.');
+    }
+
     const headers = new Headers({
-      Authorization: MAL_ACCESS_TOKEN,
+      Authorization: accessToken as string,
       'Cache-Control': 'no-store', // 🔥 Prevent caching
       Pragma: 'no-cache',
       Expires: '0',

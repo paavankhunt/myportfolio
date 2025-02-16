@@ -69,7 +69,7 @@ export async function getValidAccessToken(): Promise<string | NextResponse> {
     });
 
     console.log('✅ New Access Token Stored:', accessToken);
-    return accessToken || '';
+    return `Bearer ${accessToken}` || '';
   } catch (error) {
     console.error('❌ Error refreshing token:', error);
     return NextResponse.json(
