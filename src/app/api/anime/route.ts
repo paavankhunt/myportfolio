@@ -41,6 +41,7 @@ export async function GET(req: NextRequest) {
       { headers, cache: 'no-store' }
     );
 
+    console.log('🚀 ~ GET ~ response:', response);
     if (!response.ok) {
       const errorResponse = await response.json();
       throw new Error(`Failed to fetch anime list: ${response.statusText}`);

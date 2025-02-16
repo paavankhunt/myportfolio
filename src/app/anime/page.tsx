@@ -28,7 +28,7 @@ export default function AnimePage() {
       });
       const data = await res.json();
 
-      if (res.status === 401 && data.redirect_url) {
+      if (data.status === 401 && data.redirect_url) {
         console.log('🔄 Redirecting to MyAnimeList login...');
         window.location.href = data.redirect_url;
         return;
