@@ -1,0 +1,13 @@
+node_modules
+.next/cache
+.next/standalone
+.next/output
+dist
+.git
+.DS_Store
+
+# Ignore environment files
+.env
+.env.local
+.env.production
+.env.development
